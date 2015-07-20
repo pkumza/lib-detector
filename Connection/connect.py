@@ -25,14 +25,15 @@ HOST = "XXX.XXX.XXX.XXX"
 
 import subprocess
 
+
 def mountAPKDir(num):
-  cmd = ("sudo mount -t nfs -o addr=%s,proto=tcp,port=%d %s:%s%d/ "
-      "/home/ubuntu/apk%d") % (HOST, NFS_PORT, HOST, BASE_APK_DIR, num, num)
-  subprocess.check_output(cmd, shell=True)
+    cmd = ("sudo mount -t nfs -o addr=%s,proto=tcp,port=%d %s:%s%d/ "
+           "/home/ubuntu/apk%d") % (HOST, NFS_PORT, HOST, BASE_APK_DIR, num, num)
+    subprocess.check_output(cmd, shell=True)
 
 if __name__ == "__main__":
-  # Mount all APK directories on the remote
-  print "Mounting apk directories..."
-  for i in xrange(0, NUM_APK_DIR):
-    subprocess.call(["mkdir", "apk" + str(i)])
-    mountAPKDir(i)
+    # Mount all APK directories on the remote
+    print "Mounting apk directories..."
+    for i in xrange(0, NUM_APK_DIR):
+        subprocess.call(["mkdir", "/home/ubuntu/apk" + str(i)])
+        mountAPKDir(i)
