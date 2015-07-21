@@ -201,7 +201,7 @@ def main_func():
             apk_count += 1
             # 这里做一个log控制
             print("Decoding: " + str(apk_count) + ' APK: ' + apk)
-            decoded_path = get_smali.get_smali(apk)
+            decoded_path = get_smali(apk)
             try:
                 into_db(decoded_path)
             except Exception as e:
