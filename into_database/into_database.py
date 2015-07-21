@@ -32,7 +32,7 @@ def main_func():
     Main Function
     主方法
     """
-
+    print("Main_Function Start.")
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
     db = conn.get_database(get_config('database', 'db_name'))
     packages = db.get_collection(get_config('database', 'db_packages'))
@@ -188,4 +188,5 @@ def main_func():
 
 
 if __name__ == '__main__':
+    print "3";
     main_func()
