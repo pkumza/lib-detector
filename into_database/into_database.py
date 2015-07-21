@@ -14,7 +14,6 @@ import os
 import pymongo
 import get_smali
 import subprocess
-import helper.timer
 
 
 def get_config(section, key):
