@@ -30,7 +30,7 @@ def get_smali(path):
     :param path:
     :return:
     """
-    cmd = "/home/ubuntu/lib-detector/tool/apktool decode %s -o ../decoded/%s" % (path, os.path.basename(path))
+    cmd = "/home/ubuntu/lib-detector/tool/apktool decode %s -o /home/ubuntu/lib-detector/decoded/%s" % (path, os.path.basename(path))
     subprocess.call(cmd, shell=True)
     return '/home/ubuntu/lib-detector/decoded/%s' % os.path.basename(path)
 
