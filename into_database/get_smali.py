@@ -32,7 +32,7 @@ def get_smali(path):
     """
     cmd = "/home/ubuntu/lib-detector/tool/apktool decode %s -o ../decoded/%s" % (path, os.path.basename(path))
     subprocess.call(cmd, shell=True)
-    return '/home/ubuntu/lib-detector/decoded/%s' % os.path.basename()
+    return '/home/ubuntu/lib-detector/decoded/%s' % os.path.basename(path)
 
 def main_function_tmp():
     """
