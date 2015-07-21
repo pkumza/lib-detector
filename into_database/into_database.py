@@ -36,7 +36,6 @@ def main_func():
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
     db = conn.get_database(get_config('database', 'db_name'))
     packages = db.get_collection(get_config('database', 'db_packages'))
-    print 'Tag: Packages.'
     db_api_dict = db.get_collection(get_config('database', 'db_dict'))
     api_dict = {}
 
@@ -171,9 +170,8 @@ def main_func():
 
     source_list = get_config('source_path', 'source').split(';')
     print 'source_list'
-    print source_list
-    #print source_list
     for source_path in source_list:
+        print source_path
         dirs = glob.glob(source_path+'/*')
         apk_count = 0
         for apk in dirs:
