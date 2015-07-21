@@ -128,6 +128,10 @@ def main_func():
                             if '"' in system_call:
                                 continue
                             this_call_num += 1
+                            if "\"" in system_call or "'" in system_call or "“" in system_call or "‘" in system_call:
+                                continue
+                            if ";->" not in system_call:
+                                continue
                             call_num = get_number(system_call)
                             if call_num in this_dict:
                                 this_dict[call_num] += 1
