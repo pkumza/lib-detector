@@ -12,9 +12,19 @@ import glob
 import re
 import os
 import pymongo
-import get_smali
 import subprocess
 import thread
+
+
+def get_smali(path):
+    """
+    Convert APK into Smali file.
+    :param path:
+    :return:
+    """
+    cmd = "/home/ubuntu/lib-detector/tool/apktool decode %s -o ../decoded/%s" % (path, os.path.basename(path))
+    subprocess.call(cmd, shell=True)
+    return '/home/ubuntu/lib-detector/decoded/%s' % os.path.basename(path)
 
 
 def get_config(section, key):
