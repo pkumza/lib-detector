@@ -172,7 +172,7 @@ def main_func():
     print 'source_list'
     for source_path in source_list:
         print source_path
-        dirs = glob.glob(source_path+'/*')
+        dirs = glob.glob(source_path+'/*/*')
         apk_count = 0
         for apk in dirs:
             apk_count += 1
