@@ -103,10 +103,10 @@ def main_func():
         for thing in all_thing:
             # If the thing is a directory.
             if os.path.isdir(thing):
-                os.chdir(path+'\\'+thing)
+                os.chdir(path+'/'+thing)
                 # Merge Dictionary
                 # 合并字典
-                child = all_over(apk_path, path+'\\'+thing)
+                child = all_over(apk_path, path+'/'+thing)
                 if child is not None:
                     this_dict.update(child[0])
                     this_dir_num += child[1] + 1
@@ -148,7 +148,7 @@ def main_func():
         # If there is no API call in this package, just ignore it.
         if len(this_dict) == 0:
             return
-        parts = path[len(apk_path)+7:].split("\\")
+        parts = path[len(apk_path)+7:].split("/")
         if parts[0] == '':
             depth = 0
         else:
