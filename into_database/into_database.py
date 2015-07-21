@@ -79,6 +79,7 @@ def main_func():
         :param apk_path: The position of decoded apk
         :return: None
         """
+        print ("Log: \n \t Function: %s \n \t Para : %s " %('into_db', apk_path))
         if os.path.exists(apk_path+'\\smali'):
             os.chdir(apk_path+'\\smali')
             all_over(apk_path, apk_path+'\\smali')
@@ -177,8 +178,8 @@ def main_func():
         for apk in dirs:
             apk_count += 1
             # 这里做一个log控制
-            decoded_path = get_smali.get_smali(apk)
             print("Decoding: " + str(apk_count) + ' APK: ' + apk)
+            decoded_path = get_smali.get_smali(apk)
             try:
                 into_db(decoded_path)
             except Exception as e:
