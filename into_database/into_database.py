@@ -35,7 +35,7 @@ def main_func():
 
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
     db = conn.get_database(get_config('database', 'db_name'))
-    pacakges = db.get_collection(get_config('database', 'db_packages'))
+    packages = db.get_collection(get_config('database', 'db_packages'))
     db_api_dict = db.get_collection(get_config('database', 'db_dict'))
     api_dict = {}
 
