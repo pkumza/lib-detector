@@ -14,6 +14,7 @@ import os
 import pymongo
 import get_smali
 import subprocess
+import thread
 
 
 def get_config(section, key):
@@ -176,7 +177,13 @@ def main_func():
 
     source_list = get_config('source_path', 'source').split(';')
     print 'source_list'
-    for source_path in source_list:
+
+    def runner(source_path):
+        """
+        Run 8 thread to do this things.
+        :param source_path:
+        :return:
+        """
         print source_path
         dirs = glob.glob(source_path+'/*/*')
         apk_count = 0
@@ -192,6 +199,10 @@ def main_func():
             finally:
                 # log status 设为已经结束
                 subprocess.Popen("rm -rf %s" % decoded_path, shell=True)
+
+
+    for source_path in source_list:
+        thread.start_new_thread(runner, (source_path,))
 
 
 if __name__ == '__main__':
