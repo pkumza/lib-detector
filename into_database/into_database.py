@@ -79,10 +79,11 @@ def main_func():
         :param apk_path: The position of decoded apk
         :return: None
         """
-        print ("Log: \n \t Function: %s \n \t Para : %s " %('into_db', apk_path))
-        if os.path.exists(apk_path+'\\smali'):
-            os.chdir(apk_path+'\\smali')
-            all_over(apk_path, apk_path+'\\smali')
+        print ("Log: \n \t Function: %s \n \t Para : %s \n" %('into_db', apk_path))
+        print ("Log: \n \t Path : %s " % (apk_path+'/smali'))
+        if os.path.exists(apk_path+'/smali'):
+            os.chdir(apk_path+'/smali')
+            all_over(apk_path, apk_path+'/smali')
             os.chdir(apk_path)
 
     def all_over(apk_path, path):
