@@ -14,6 +14,7 @@ import os
 import pymongo
 import get_smali
 import subprocess
+import helper.timer
 
 
 def get_config(section, key):
@@ -195,4 +196,7 @@ def main_func():
 
 
 if __name__ == '__main__':
+    timer = helper.timer.TimeRecord()
+    timer.start()
     main_func()
+    timer.end()
