@@ -44,6 +44,7 @@ def main_func():
     print("Main_Function Start.")
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
     db = conn.get_database(get_config('database', 'db_name'))
+    apk_start = db.get_collection(get_config('database', 'db_apk_start'))
     packages = db.get_collection(get_config('database', 'db_packages'))
     db_api_dict = db.get_collection(get_config('database', 'db_dict'))
     api_dict = {}
@@ -190,6 +191,9 @@ def main_func():
         dirs = glob.glob(source_path+'/*/*')
         apk_count = 0
         for apk in dirs:
+            if apk_start.find_one({"apk_name": apk}).count() == 1:
+                continue
+            apk_start.insert({"apk_name": apk})
             apk_count += 1
             # 这里做一个log控制
             print("Decoding: " + str(apk_count) + ' APK: ' + apk)
