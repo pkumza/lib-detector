@@ -12,8 +12,18 @@ import glob
 import re
 import os
 import pymongo
-import get_smali
 import subprocess
+
+
+def get_smali(path):
+    """
+    Convert APK into Smali file.
+    :param path:
+    :return:
+    """
+    cmd = "/home/ubuntu/lib-detector/tool/apktool decode %s -o /home/ubuntu/lib-detector/decoded/%s" % (path, os.path.basename(path))
+    subprocess.call(cmd, shell=True)
+    return '/home/ubuntu/lib-detector/decoded/%s' % os.path.basename(path)
 
 
 def get_config(section, key):
@@ -184,7 +194,7 @@ def main_func():
             apk_count += 1
             # 这里做一个log控制
             print("Decoding: " + str(apk_count) + ' APK: ' + apk)
-            decoded_path = get_smali.get_smali(apk)
+            decoded_path = get_smali(apk)
             try:
                 into_db(decoded_path)
             except Exception as e:
