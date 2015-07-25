@@ -1,5 +1,5 @@
 __author__ = 'Marchon'
-# 目的：新建apk_start = db.get_collection(get_config('database', 'db_apk_start'))
+# Target : add  - apk_start = db.get_collection(get_config('database', 'db_apk_start'))
 
 
 import ConfigParser
