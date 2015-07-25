@@ -191,7 +191,8 @@ def main_func():
         dirs = glob.glob(source_path+'/*/*')
         apk_count = 0
         for apk in dirs:
-            if apk_start.find_one({"apk_name": apk}).count() == 1:
+            if apk_start.find({"apk_name": apk}).count() == 1:
+                print "Already Exists."
                 continue
             apk_start.insert({"apk_name": apk})
             apk_count += 1

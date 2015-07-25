@@ -34,6 +34,8 @@ def main_func():
     cnt = 0
     for package in packages.find():
         cnt += 1
+        if cnt < 335800:
+            continue
         if apk_start.find({"apk_name": package["apk"]}).count() == 0:
             if cnt % 100 == 0:
                 print "Tag %d %s" % (cnt, package["apk"])
