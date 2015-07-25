@@ -34,9 +34,9 @@ def main_func():
     cnt = 0
     for package in packages.find():
         cnt += 1
-        print "Pass %d" % cnt
         if apk_start.find({"apk_name": package["apk"]}).count() == 0:
-            print "Tag %d %s" % (cnt, package["apk"])
+            if cnt % 100 == 0:
+                print "Tag %d %s" % (cnt, package["apk"])
             apk_start.insert({"apk_name": package["apk"]})
 
 
