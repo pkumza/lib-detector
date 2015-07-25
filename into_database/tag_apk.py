@@ -31,8 +31,11 @@ def main_func():
     db_api_dict = db.get_collection(get_config('database', 'db_dict'))
     api_dict = {}
 
+    cnt = 0
     for package in packages.find():
+        cnt += 1
         if apk_start.find({"apk_name": package["apk"]}).count() == 0:
+            print "Tag %d %s" % (cnt. package["apk"])
             apk_start.insert({"apk_name": package["apk"]})
 
 
