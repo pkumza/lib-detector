@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 __author__ = 'Marchon'
 # Target : add  - apk_start = db.get_collection(get_config('database', 'db_apk_start'))
 
