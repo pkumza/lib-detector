@@ -52,7 +52,7 @@ def main_func():
     db = conn.get_database(get_config('database', 'db_name'))
     packages = db.get_collection(get_config('database', 'db_packages'))
     db_api_dict = db.get_collection(get_config('database', 'db_dict'))
-    brief = db.get_collection(get_config('database', 'brief'))
+    brief = db.get_collection(get_config('database', 'db_brief'))
     cnt = 0
     for package in packages.find():
         cnt += 1
