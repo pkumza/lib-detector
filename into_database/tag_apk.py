@@ -2,6 +2,10 @@
 __author__ = 'Marchon'
 # Target : add  - apk_start = db.get_collection(get_config('database', 'db_apk_start'))
 
+# This File has lost its use.
+# 这个脚本是用来临时patch的
+# 因为之前没有db.apk_start这一个项目，然后又已经运行了不少内容，这个就是用来做这个作用的。
+
 
 import ConfigParser
 import pymongo
