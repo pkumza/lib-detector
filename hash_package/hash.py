@@ -8,12 +8,9 @@
 __author__ = 'Marchon'
 
 import ConfigParser
-import glob
-import re
-import os
 import pymongo
-import subprocess
 '''
+Before:
 {
 "_id" : ObjectId("55ae0deea0f89a745ee0e88d"),
 "status" : 0,
@@ -28,6 +25,30 @@ import subprocess
 "total_call" : 6,
 "depth" : 4,
 "file_num" : 1 }
+'''
+
+'''
+After:
+{ "_id" : ObjectId("55c1dcbfea9448082b3c6003"),
+ "status" : 0,
+ "direct_file_num" : 1,
+ "file_num" : 1,
+ "path_parts" : [ "com",
+ "google",
+ "android",
+ "gms",
+ "actions" ],
+ "total_num" : 1,
+ "old_id" : ObjectId("55ae11a8a0f89a77fe4588c2"),
+ "b_total_call" : 1,
+ "dir_num" : 0,
+ "apk" : "/home/ubuntu/lib-detector/decoded/com.ska.apk",
+ "depth" : 5,
+ "b_total_num" : 1,
+ "b_hash" : 1,
+ "direct_dir_num" : 0,
+ "path" : "/home/ubuntu/lib-detector/decoded/com.ska.apk/smali/com/google/android/gms/actions",
+ "total_call" : 1 }
 '''
 
 
