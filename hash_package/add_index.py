@@ -25,7 +25,7 @@ def get_config(section, key):
     载入设置文件 : into_database.conf
     """
     config = ConfigParser.ConfigParser()
-    path = 'into_database.conf'
+    path = 'hash.conf'
     config.read(path)
     return config.get(section, key)
 
