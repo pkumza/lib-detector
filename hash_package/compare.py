@@ -128,6 +128,12 @@ def main_func():
 
     for package in packages:
         package_count += 1
+
+        # !!!!!!! Important !!!!
+        # This is a patch. Delete it when you run this function.
+        # Step over Status 4.
+        if package_count < 362982:
+            continue
         # We believe root directory is not a library unless the whole App is a library.
         if package['depth'] == 0:
             package['status'] = 4
@@ -168,6 +174,7 @@ def main_func():
 
         if not cur_b:       # if cur_package is not available
             cur_p = package
+            cur_p['dep_num'] = 1
             cur_b = True
             continue
 
