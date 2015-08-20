@@ -132,8 +132,11 @@ def main_func():
         # !!!!!!! Important !!!!
         # This is a patch. Delete it when you run this function.
         # Step over Status 4.
-        if package_count < 362982:
-            continue
+
+        # if package_count < 362982:
+        #    continue
+        # delete this.
+
         # We believe root directory is not a library unless the whole App is a library.
         if package['depth'] == 0:
             package['status'] = 4
@@ -146,6 +149,15 @@ def main_func():
 
         # If a package has only one directory, and
         if package['direct_dir_num'] == 1 and package['direct_file_num'] == 0:
+            if cur_b:
+                if cur_p['dep_num'] > 50:
+                    cur_p['status'] = 1
+                    status_1_cnt += 1
+                else:
+                    cur_p['status'] = 2
+                    status_2_cnt += 1
+                del cur_p['_id']
+                dep_packages.insert(cur_p)
             package['status'] = 5
             dir_parent_dict[package['path']] = 5
             del package['_id']
@@ -306,7 +318,7 @@ def main_func():
     dep_statistics represents the repetitions status.
     status_statistics represents every package's status.
     """
-    dep_writer = open(get_config('dep_statistics', 'out_file'), 'w')
+    dep_writer = open('dep_status.txt', 'w')
     for a, b in [(k, total_dep_num[k]) for k in sorted(total_dep_num.keys())]:
         dep_writer.write(str(a)+'\t'+str(b)+'\n')
     dep_writer.close()
