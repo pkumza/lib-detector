@@ -16,6 +16,8 @@
 
     Trivial Notes：
         dep_packages 是第一次尝试，以卡机失败告终。
+        dep_packages2 第二次尝试，但是有一些big
+        dep_packages3 修复了一些bug，然后尝试增加新的元素，即子元素的path parts都记录下来。
 
 """
 __author__ = 'Zachary Marv - 马子昂'
@@ -187,6 +189,7 @@ def main_func():
         if not cur_b:       # if cur_package is not available
             cur_p = package
             cur_p['dep_num'] = 1
+            cur_p['pp'] = []
             cur_b = True
             continue
 
@@ -196,6 +199,7 @@ def main_func():
                     if package['b_total_num'] == cur_p['b_total_num']:
                         if package['b_hash'] == cur_p['b_hash']:
                             cur_p['dep_num'] += 1
+                            cur_p['pp'].append(package['path'][len(package['apk'] + 6):])
                             package['parent'] = cur_p['path']
                             package['status'] = 6
                             status_6_cnt += 1
@@ -214,6 +218,7 @@ def main_func():
         dep_packages.insert(cur_p)
         cur_p = package
         cur_p['dep_num'] = 1
+        cur_p['pp'] = []
 
         """   *************************************************************
         # len(common) == 0 is used just for the first package comes here.
