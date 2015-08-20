@@ -199,6 +199,7 @@ def main_func():
 
         dep_packages.insert(cur_p)
         cur_p = package
+        cur_p['dep_num'] = 1
 
         """   *************************************************************
         # len(common) == 0 is used just for the first package comes here.
