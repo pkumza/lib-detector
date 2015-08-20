@@ -187,6 +187,7 @@ def main_func():
                             package['parent'] = cur_p['path']
                             package['status'] = 6
                             status_6_cnt += 1
+                            del package['_id']
                             dep_packages_st_6.insert(package)
                             continue
 
@@ -197,6 +198,7 @@ def main_func():
             cur_p['status'] = 2
             status_2_cnt += 1
 
+        del cur_p['_id']
         dep_packages.insert(cur_p)
         cur_p = package
         cur_p['dep_num'] = 1
