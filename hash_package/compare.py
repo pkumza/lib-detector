@@ -199,7 +199,7 @@ def main_func():
                     if package['b_total_num'] == cur_p['b_total_num']:
                         if package['b_hash'] == cur_p['b_hash']:
                             cur_p['dep_num'] += 1
-                            cur_p['pp'].append(package['path'][len(package['apk'] + 6):])
+                            cur_p['pp'].append(package['path'])
                             package['parent'] = cur_p['path']
                             package['status'] = 6
                             status_6_cnt += 1
