@@ -199,7 +199,13 @@ def main_func():
                     if package['b_total_num'] == cur_p['b_total_num']:
                         if package['b_hash'] == cur_p['b_hash']:
                             cur_p['dep_num'] += 1
-                            cur_p['pp'].append(package['path'])
+                            # this code made the Database extremely large.
+                            # cur_p['pp'].append(package['path'])
+                            # Modified 2015/08/21 ->
+                            # only mark the unique one.
+                            s_path = '/'.join(package['path_parts'])
+                            if s_path not in cur_p['pp']:
+                                cur_p['pp'].append(s_path)
                             package['parent'] = cur_p['path']
                             package['status'] = 6
                             status_6_cnt += 1
