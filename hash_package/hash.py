@@ -6,7 +6,7 @@
         ***
 """
 __author__ = 'Marchon'
-
+# Server Label
 Label = 0
 
 import ConfigParser
@@ -99,7 +99,7 @@ def main_func():
         br["direct_dir_num"] = package["direct_dir_num"]
         br["path"] = package["path"]
         br["direct_file_num"] = package["direct_file_num"]
-        br["path_parts"] = package["path_parts"]
+        br["s_path"] = '/'.join(package["path_parts"])
         br["total_num"] = package["total_num"]
         br["total_call"] = package["total_call"]
         br["depth"] = package["depth"]
