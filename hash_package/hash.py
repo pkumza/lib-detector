@@ -7,6 +7,8 @@
 """
 __author__ = 'Marchon'
 
+Label = 0
+
 import ConfigParser
 import pymongo
 '''
@@ -68,15 +70,20 @@ def main_func():
     Main Function
     主方法
     """
-    print("Main_Function Start.")
-    conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
+    print("I am the Server %d." % Label)
+    print("Main_Func Start.")
+    conn = pymongo.MongoClient(get_config('database', 'source_host'), int(get_config('database', 'db_port')))
+    target_conn = pymongo.MongoClient(get_config('database', 'target_host'), int(get_config('database', 'db_port')))
     db = conn.get_database(get_config('database', 'db_name'))
+    target_db = target_conn.get_database(get_config('database', 'db_name'))
     packages = db.get_collection(get_config('database', 'db_packages'))
-    db_api_dict = db.get_collection(get_config('database', 'db_dict'))
-    brief = db.get_collection(get_config('database', 'db_brief'))
+    # db_api_dict = db.get_collection(get_config('database', 'db_dict'))
+    brief = target_db.get_collection(get_config('database', 'db_brief'))
     cnt = 0
     for package in packages.find():
         cnt += 1
+        if cnt / 15000000 != Label:
+            continue
         if cnt % 100 == 0:
             print cnt
         cnt_file = open('cnt.txt', 'w')
