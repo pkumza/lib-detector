@@ -81,8 +81,10 @@ def main_func():
     brief = target_db.get_collection(get_config('database', 'db_brief'))
     cnt = 0
     Slicer = 15000000
-    for package in packages.find()[Label * Slicer: (Label+1) * Slicer]:
+    for package in packages.find():
         cnt += 1
+        if cnt % 5 != Label:
+            continue
         #if cnt / 15000000 != Label:
         #    continue
         if cnt % 100 == 0:
