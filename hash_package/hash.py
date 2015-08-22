@@ -80,10 +80,11 @@ def main_func():
     # db_api_dict = db.get_collection(get_config('database', 'db_dict'))
     brief = target_db.get_collection(get_config('database', 'db_brief'))
     cnt = 0
-    for package in packages.find():
+    Slicer = 15000000
+    for package in packages.find()[Label * Slicer: (Label+1) * Slicer]:
         cnt += 1
-        if cnt / 15000000 != Label:
-            continue
+        #if cnt / 15000000 != Label:
+        #    continue
         if cnt % 100 == 0:
             print cnt
         cnt_file = open('cnt.txt', 'w')
