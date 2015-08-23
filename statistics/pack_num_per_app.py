@@ -23,11 +23,8 @@ def get_config(section, key):
     return config.get(section, key)
 
 
-def main_func():
-    """
-    Main Function
-    主方法
-    """
+if __name__ == '__main__':
+
     num_dict = {}
     print("Main_Function Starts.")
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
@@ -50,8 +47,3 @@ def main_func():
         res.write('\n')
     res.close()
     print("Main_Function Ends.")
-
-
-if __name__ == '__main__':
-
-    main_func()
