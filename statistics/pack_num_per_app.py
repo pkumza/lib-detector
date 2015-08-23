@@ -9,7 +9,6 @@ __author__ = 'Zachary Marv - 马子昂'
 
 import ConfigParser
 import pymongo
-import sys
 
 
 def get_config(section, key):
@@ -30,8 +29,7 @@ if __name__ == '__main__':
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
     db = conn.get_database(get_config('database', 'db_name'))
     packages = db.get_collection(get_config('database', 'db_packages'))
-    if len[sys.argv] > 1 and sys.argv[1] == 'a':
-        result = packages.create_index([('apk', pymongo.ASCENDING)])
+    print packages.create_index([('apk', pymongo.ASCENDING)])
     apks = db.get_collection('apk_start')
     for apk in apks:
         num = packages.find({"apk" : apk}).count()
