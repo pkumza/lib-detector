@@ -83,6 +83,8 @@ def main_func():
     Slicer = 15000000
     for package in packages.find():
         cnt += 1
+        if cnt < 58633340:
+            continue
         if cnt % 5 != Label:
             continue
         #if cnt / 15000000 != Label:
