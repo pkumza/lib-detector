@@ -32,8 +32,9 @@ if __name__ == '__main__':
     # print packages.create_index([('apk', pymongo.ASCENDING)])
     cnt = 0
     log = open('log.txt', 'w')
-    apks = db.get_collection('apk_start')
-    for apk in apks:
+    apks = db.get_collection('apk_start').find()
+    for app in apks:
+        apk = app['apk_name']
         cnt += 1
         if cnt % 100 == 0:
             log.write(str(cnt)+'\n')
