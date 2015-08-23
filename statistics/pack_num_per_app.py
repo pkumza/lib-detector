@@ -29,9 +29,16 @@ if __name__ == '__main__':
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
     db = conn.get_database(get_config('database', 'db_name'))
     packages = db.get_collection(get_config('database', 'db_packages'))
-    print packages.create_index([('apk', pymongo.ASCENDING)])
+    # print packages.create_index([('apk', pymongo.ASCENDING)])
+    cnt = 0
+    log = open('log.txt', 'w')
     apks = db.get_collection('apk_start')
     for apk in apks:
+        cnt += 1
+        if cnt % 100 == 0:
+            log.write(str(cnt)+'\n')
+            if cnt % 1000 == 0:
+                print cnt
         num = packages.find({"apk" : apk}).count()
         if num not in num_dict:
             num_dict[num] = 1
