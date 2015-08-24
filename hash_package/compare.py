@@ -95,6 +95,7 @@ def main_func():
     # package = packages.next()
     dep_packages = db[get_config('database', 'db_dep')]
     dep_packages_st_6 = db[get_config('database', 'db_dep_6')]
+    dep_packages_st_4 = db[get_config('database', 'db_dep_4')]
 
     """
         Search the packages among the database.
@@ -128,7 +129,9 @@ def main_func():
     cur_p = None
     cur_b = False
 
-    for package in packages:
+    for package in packages.find({"b_total_call": {"$gt": 5}},
+                                 {"b_total_call": 1, "b_total_num": 1, "b_hash": 1, "depth": 1, "status": 1,
+                                  "path": 1, "s_path": 1}):
         package_count += 1
 
         # !!!!!!! Important !!!!
@@ -144,12 +147,13 @@ def main_func():
             package['status'] = 4
             dir_parent_dict[package['path']] = 4
             del package['_id']
-            dep_packages.insert(package)
+            dep_packages_st_4.insert(package)
             status_4_cnt += 1
             cur_b = False
             continue
 
         # If a package has only one directory, and
+        '''
         if package['direct_dir_num'] == 1 and package['direct_file_num'] == 0:
             if cur_b:
                 if cur_p['dep_num'] > 50:
@@ -167,6 +171,7 @@ def main_func():
             status_5_cnt += 1
             cur_b = False
             continue
+            '''
 
         # (if this package's dir_parent is lib, there's no need to compare this package any more.
         # 1 means lib_root; 3 means lib_child, so I use Modulo operation here.)
@@ -203,7 +208,7 @@ def main_func():
                             # cur_p['pp'].append(package['path'])
                             # Modified 2015/08/21 ->
                             # only mark the unique one.
-                            s_path = '/'.join(package['path_parts'])
+                            s_path = package['s_path']
                             if s_path not in cur_p['pp']:
                                 cur_p['pp'].append(s_path)
                             package['parent'] = cur_p['path']
