@@ -89,7 +89,9 @@ def main_func():
     """
     conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
     db = conn[get_config('database', 'db_name')]
-    packages = db[get_config('database', 'db_brief')].find().sort([
+    packages = db[get_config('database', 'db_brief')].find({"b_total_call": {"$gt": 5}},
+                                 {"b_total_call": 1, "b_total_num": 1, "b_hash": 1, "depth": 1, "status": 1,
+                                  "path": 1, "s_path": 1}).sort([
         ("depth", pymongo.ASCENDING), ("b_total_call", pymongo.ASCENDING),
         ('b_total_num', pymongo.ASCENDING), ("b_hash", pymongo.ASCENDING)])
     # package = packages.next()
@@ -129,9 +131,7 @@ def main_func():
     cur_p = None
     cur_b = False
 
-    for package in packages.find({"b_total_call": {"$gt": 5}},
-                                 {"b_total_call": 1, "b_total_num": 1, "b_hash": 1, "depth": 1, "status": 1,
-                                  "path": 1, "s_path": 1}):
+    for package in packages:
         package_count += 1
 
         # !!!!!!! Important !!!!
