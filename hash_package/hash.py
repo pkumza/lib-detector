@@ -81,10 +81,10 @@ def main_func():
     brief = target_db.get_collection(get_config('database', 'db_brief'))
     cnt = 0
     Slicer = 15000000
-    for package in packages.find():
+    for package in packages.find().skip(58633340):
         cnt += 1
-        if cnt < 58633340:
-            continue
+        # if cnt < 58633340:
+        #     continue
         if cnt % 5 != Label:
             continue
         #if cnt / 15000000 != Label:
