@@ -73,16 +73,18 @@ def main_func():
     db = conn.get_database(get_config('database', 'db_name'))
     packages = db.get_collection(get_config('database', 'db_packages'))
     db_api_dict = db.get_collection(get_config('database', 'db_dict'))
-    brief = db.get_collection(get_config('database', 'db_brief'))
+    conn_brief = pymongo.MongoClient("52.4.74.58", 27017)
+    db_brief = conn_brief.get_database(get_config('database', 'db_name'))
+    brief = db_brief.get_collection(get_config('database', 'db_brief'))
     cnt = 0
-    for package in packages.find():
+    for package in packages.find().skip(58633340):
         cnt += 1
-        if cnt % 100 == 0:
+        if cnt % 1000 == 0:
             print cnt
-        cnt_file = open('cnt.txt', 'w')
-        cnt_file.write(str(cnt))
-        cnt_file.close()
-        # brief_package
+            #cnt_file = open('cnt.txt', 'w')
+            #cnt_file.write(str(cnt))
+            #cnt_file.close()
+            # brief_package
         br = {}
         pass
         br["old_id"] = package["_id"]
