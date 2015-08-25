@@ -127,12 +127,14 @@ def main_func():
     status_6_cnt = 0                # Status 6 means 有重复，且不是代表元素
     dir_parent_dict = {}            # scanned packages' statuses.
     package_count = 0               # count
-    packages_num = packages.count()
+    # packages_num = packages.count()
     cur_p = None
     cur_b = False
 
     for package in packages:
         package_count += 1
+        if package > 15000000:
+            break
         if package["b_total_call"] < 5:
             continue
 
@@ -143,8 +145,12 @@ def main_func():
         # if package_count < 362982:
         #    continue
         # delete this.
+        if package_count < 1012504:
+            continue
+
 
         # We believe root directory is not a library unless the whole App is a library.
+        '''
         if package['depth'] == 0:
             package['status'] = 4
             dir_parent_dict[package['path']] = 4
@@ -153,6 +159,7 @@ def main_func():
             status_4_cnt += 1
             cur_b = False
             continue
+            '''
 
         # If a package has only one directory, and
         '''
@@ -199,25 +206,28 @@ def main_func():
             cur_p['pp'] = []
             cur_b = True
             continue
-        if package_count != packages_num:
-            if package['depth'] == cur_p['depth']:
-                if package['b_total_call'] == cur_p['b_total_call']:
-                    if package['b_total_num'] == cur_p['b_total_num']:
-                        if package['b_hash'] == cur_p['b_hash']:
-                            cur_p['dep_num'] += 1
-                            # this code made the Database extremely large.
-                            # cur_p['pp'].append(package['path'])
-                            # Modified 2015/08/21 ->
-                            # only mark the unique one.
+
+        if package['depth'] == cur_p['depth']:
+            if package['b_total_call'] == cur_p['b_total_call']:
+                if package['b_total_num'] == cur_p['b_total_num']:
+                    if package['b_hash'] == cur_p['b_hash']:
+                        cur_p['dep_num'] += 1
+                        # this code made the Database extremely large.
+                        # cur_p['pp'].append(package['path'])
+                        # Modified 2015/08/21 ->
+                        # only mark the unique one.
+                        try:
                             s_path = package['s_path']
                             if s_path not in cur_p['pp']:
                                 cur_p['pp'].append(s_path)
-                            package['parent'] = cur_p['path']
-                            package['status'] = 6
-                            status_6_cnt += 1
-                            del package['_id']
-                            dep_packages_st_6.insert(package)
-                            continue
+                        except:
+                            print 'No S_Path'
+                        package['parent'] = cur_p['path']
+                        package['status'] = 6
+                        status_6_cnt += 1
+                        del package['_id']
+                        dep_packages_st_6.insert(package)
+                        continue
 
         if cur_p['dep_num'] > 50:
             cur_p['status'] = 1
