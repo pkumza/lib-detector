@@ -150,7 +150,7 @@ def main_func():
         # If a package has only one directory, and
         if package['direct_dir_num'] == 1 and package['direct_file_num'] == 0:
             if cur_b:
-                if cur_p['dep_num'] > 50:
+                if cur_p['dep_num'] > 500:
                     cur_p['status'] = 1
                     status_1_cnt += 1
                 else:
