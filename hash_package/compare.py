@@ -95,6 +95,10 @@ def main_func():
     # package = packages.next()
     dep_packages = db[get_config('database', 'db_dep')]
     dep_packages_st_6 = db[get_config('database', 'db_dep_6')]
+    dep_packages_st_4 = db[get_config('database', 'db_dep_4')]
+    dep_packages_st_5 = db[get_config('database', 'db_dep_5')]
+    dep_packages_st_1 = db[get_config('database', 'db_dep_1')]
+    dep_packages_st_2 = db[get_config('database', 'db_dep_2')]
 
     """
         Search the packages among the database.
@@ -144,7 +148,7 @@ def main_func():
             package['status'] = 4
             dir_parent_dict[package['path']] = 4
             del package['_id']
-            dep_packages.insert(package)
+            dep_packages_st_4.insert(package)
             status_4_cnt += 1
             cur_b = False
             continue
@@ -152,18 +156,20 @@ def main_func():
         # If a package has only one directory, and
         if package['direct_dir_num'] == 1 and package['direct_file_num'] == 0:
             if cur_b:
-                if cur_p['dep_num'] > 50:
+                if cur_p['dep_num'] > 500:
                     cur_p['status'] = 1
                     status_1_cnt += 1
+                    del cur_p['_id']
+                    dep_packages_st_1.insert(cur_p)
                 else:
                     cur_p['status'] = 2
                     status_2_cnt += 1
-                del cur_p['_id']
-                dep_packages.insert(cur_p)
+                    del cur_p['_id']
+                    dep_packages_st_2.insert(cur_p)
             package['status'] = 5
             dir_parent_dict[package['path']] = 5
             del package['_id']
-            dep_packages.insert(package)
+            dep_packages_st_5.insert(package)
             status_5_cnt += 1
             cur_b = False
             continue
@@ -216,12 +222,13 @@ def main_func():
         if cur_p['dep_num'] > 50:
             cur_p['status'] = 1
             status_1_cnt += 1
+            del cur_p['_id']
+            dep_packages_st_1.insert(cur_p)
         else:
             cur_p['status'] = 2
             status_2_cnt += 1
-
-        del cur_p['_id']
-        dep_packages.insert(cur_p)
+            del cur_p['_id']
+            dep_packages_st_2.insert(cur_p)
         cur_p = package
         cur_p['dep_num'] = 1
         cur_p['pp'] = []
@@ -333,7 +340,7 @@ def main_func():
     for a, b in [(k, total_dep_num[k]) for k in sorted(total_dep_num.keys())]:
         dep_writer.write(str(a)+'\t'+str(b)+'\n')
     dep_writer.close()
-    status_writer = open(get_config('dep_statistics', 'status_statistics'), 'w')
+    status_writer = open("Stat_num.txt", 'w')
     status_writer.write('Status 1 : '+str(status_1_cnt)+'\n')
     status_writer.write('Status 2 : '+str(status_2_cnt)+'\n')
     status_writer.write('Status 3 : '+str(status_3_cnt)+'\n')
