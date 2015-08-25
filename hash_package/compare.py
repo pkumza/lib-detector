@@ -133,7 +133,7 @@ def main_func():
 
     for package in packages:
         package_count += 1
-        if package > 15000000:
+        if package_count > 15000000:
             break
         if package["b_total_call"] < 5:
             continue
