@@ -349,7 +349,7 @@ def main_func():
     for a, b in [(k, total_dep_num[k]) for k in sorted(total_dep_num.keys())]:
         dep_writer.write(str(a)+'\t'+str(b)+'\n')
     dep_writer.close()
-    status_writer = open("../stat/status_num", 'w')
+    status_writer = open("status_num.txt", 'w')
     status_writer.write('Status 1 : '+str(status_1_cnt)+'\n')
     status_writer.write('Status 2 : '+str(status_2_cnt)+'\n')
     status_writer.write('Status 3 : '+str(status_3_cnt)+'\n')
