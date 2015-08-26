@@ -55,6 +55,22 @@ class TimeRecord:
         print('*' * 60)
         print('Task: '+sys.argv[0]+' Starts.')
 
+    def alert(self, cnt):
+        end_time = time.time()
+        if self.if_start:
+            task_interval = end_time - self.start_time
+            m = int(task_interval) / 60
+            s = int(task_interval) % 60
+            if m <= 1:
+                mi = 'minute'
+            else:
+                mi = 'minutes'
+            if s <= 1:
+                se = 'second'
+            else:
+                se = 'seconds'
+            print('Already ' + str(cnt) + ', Consuming '+str(m)+' '+mi+' and '+str(s)+' '+se+'.')
+
     def end(self):
         end_time = time.time()
         if self.if_start:
@@ -75,30 +91,29 @@ class TimeRecord:
         self.if_start = False
 
 
+time_recorder = TimeRecord()
+
+
 def main_func():
     """
     Main Function
     主方法
-    Run this function to compare every package.
-    Input is get_config('database', 'db_pack')
-    Output is get_config('database', 'db_dep_pack')
+    精简 D7
     """
 
     """
     Connect to the Database and get input and output collection.
     """
-    conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
-    db = conn[get_config('database', 'db_name')]
-    packages = db[get_config('database', 'db_brief')].find().sort([
+    conn = pymongo.MongoClient('localhost', 27017)
+    db = conn['test']
+    packages = db['bb'].find().sort([
         ("depth", pymongo.ASCENDING), ("b_total_call", pymongo.ASCENDING),
         ('b_total_num', pymongo.ASCENDING), ("b_hash", pymongo.ASCENDING)])
-    # package = packages.next()
-    dep_packages = db[get_config('database', 'db_dep')]
-    dep_packages_st_6 = db[get_config('database', 'db_dep_6')]
-    dep_packages_st_4 = db[get_config('database', 'db_dep_4')]
-    dep_packages_st_5 = db[get_config('database', 'db_dep_5')]
-    dep_packages_st_1 = db[get_config('database', 'db_dep_1')]
-    dep_packages_st_2 = db[get_config('database', 'db_dep_2')]
+    dep_packages_st_1 = db['d1']
+    dep_packages_st_2 = db['d2']
+    dep_packages_st_4 = db['d4']
+    dep_packages_st_5 = db['d5']
+    dep_packages_st_6 = db['d6']
 
     """
         Search the packages among the database.
@@ -132,9 +147,12 @@ def main_func():
     cur_p = None
     cur_b = False
 
+    cnt = 0
     for package in packages:
         package_count += 1
-
+        if cnt % 1000 == 0:
+            time_recorder.alert(cnt)
+        cnt += 1
         # !!!!!!! Important !!!!
         # This is a patch. Delete it when you run this function.
         # Step over Status 4.
@@ -145,8 +163,8 @@ def main_func():
 
         # We believe root directory is not a library unless the whole App is a library.
         if package['depth'] == 0:
-            package['status'] = 4
-            dir_parent_dict[package['path']] = 4
+            if 's_path' in package:
+                dir_parent_dict[package['s_path']] = 4
             del package['_id']
             dep_packages_st_4.insert(package)
             status_4_cnt += 1
@@ -154,6 +172,7 @@ def main_func():
             continue
 
         # If a package has only one directory, and
+        '''
         if package['direct_dir_num'] == 1 and package['direct_file_num'] == 0:
             if cur_b:
                 if cur_p['dep_num'] > 500:
@@ -173,6 +192,7 @@ def main_func():
             status_5_cnt += 1
             cur_b = False
             continue
+            '''
 
         # (if this package's dir_parent is lib, there's no need to compare this package any more.
         # 1 means lib_root; 3 means lib_child, so I use Modulo operation here.)
@@ -209,23 +229,21 @@ def main_func():
                             # cur_p['pp'].append(package['path'])
                             # Modified 2015/08/21 ->
                             # only mark the unique one.
-                            s_path = '/'.join(package['path_parts'])
+                            if 's_path' not in package:
+                                continue
+                            s_path = package['s_path']
                             if s_path not in cur_p['pp']:
                                 cur_p['pp'].append(s_path)
-                            package['parent'] = cur_p['path']
-                            package['status'] = 6
                             status_6_cnt += 1
                             del package['_id']
                             dep_packages_st_6.insert(package)
                             continue
 
         if cur_p['dep_num'] > 50:
-            cur_p['status'] = 1
             status_1_cnt += 1
             del cur_p['_id']
             dep_packages_st_1.insert(cur_p)
         else:
-            cur_p['status'] = 2
             status_2_cnt += 1
             del cur_p['_id']
             dep_packages_st_2.insert(cur_p)
@@ -357,7 +375,6 @@ def main_func():
 
 if __name__ == '__main__':
     print("This code is written by " + __author__ + '\n')
-    time_recorder = TimeRecord()
     time_recorder.start()
     main_func()
     time_recorder.end()

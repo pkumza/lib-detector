@@ -69,9 +69,9 @@ def add_depth_1_btc_1_btn_1_bha_1():
     b_hash .ASCENDING
     :return:
     """
-    conn = pymongo.MongoClient(get_config('database', 'db_host'), int(get_config('database', 'db_port')))
-    db = conn.get_database(get_config('database', 'db_name'))
-    packages = db.get_collection(get_config('database', 'db_brief'))
+    conn = pymongo.MongoClient('localhost', 27017)
+    db = conn['test']
+    packages = db.get_collection('bb')
     result = packages.create_index([('depth', pymongo.ASCENDING), ('b_total_call', pymongo.ASCENDING),
                                     ('b_total_num', pymongo.ASCENDING), ('b_hash', pymongo.ASCENDING)])
     print(str(result))
