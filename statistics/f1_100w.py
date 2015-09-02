@@ -59,24 +59,35 @@ def main_func():
     conn = pymongo.MongoClient('localhost', 27017)
     lib_d = conn['lib-detect']
     brief = lib_d.get_collection('brief_packages')
+
+
+    '''
     test = conn.get_database('test')
     d1 = test.get_collection('d1')
     d2 = test.get_collection('d2')
     d4 = test.get_collection('d4')
     d6 = test.get_collection('d6')
+    '''
+
+
     res_call = {}
     res_num = {}
-    for d in d1.find():
 
-        num = d['dep_num']
-        if d['b_total_num'] not in res_num:
-            res_num[d['b_total_num']] = num
-        else:
-            res_num[d['b_total_num']] += num
-        if d['b_total_call'] not in res_call:
-            res_call[d['b_total_call']] = num
-        else:
-            res_call[d['b_total_call']] += num
+    cnt = 0
+    for package in brief.find():
+        if cnt % 1000 == 0:
+            print cnt
+        cnt += 1
+        if package['direct_dir_num'] == 0:
+            if package['b_total_call'] in res_call:
+                res_call[package['b_total_call']] += 1
+            else:
+                res_call[package['b_total_call']] = 1
+            if package['b_total_num'] in res_num:
+                res_num[package['b_total_num']] += 1
+            else:
+                res_num[package['b_total_num']] = 1
+
     result = open('res_call.txt', 'w')
     result.write(json.dumps(res_call))
     result.close()
