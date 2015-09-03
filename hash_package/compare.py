@@ -3,40 +3,16 @@
 # Original Code Created at 2015/4/27
 # Modified at 2015/5/4
 # Modified at 2015/08/19
-"""
-    Function:
-        Compare packages
-    作用：
-        比较包
+# Modified at 2015/08/26
+# export brief and redo it
+# depth bttc bttn path b_hash direct_dir_num
 
-    Usage:
-        Modify intodb.conf, then just run this code or import intodb.py then call function 'main_func()'.
-    用法：
-        修改intodb.conf的设置，然后运行本代码，或者import intodb.py之后调用main_func()方法即可。
 
-    Trivial Notes：
-        dep_packages 是第一次尝试，以卡机失败告终。
-        dep_packages2 第二次尝试，但是有一些big
-        dep_packages3 修复了一些bug，然后尝试增加新的元素，即子元素的path parts都记录下来。
-
-"""
 __author__ = 'Zachary Marv - 马子昂'
 
-import ConfigParser
 import pymongo
 import sys
 import time
-
-
-def get_config(section, key):
-    """
-    Load the config File : into_database.conf
-    载入设置文件 : into_database.conf
-    """
-    config = ConfigParser.ConfigParser()
-    path = 'hash.conf'
-    config.read(path)
-    return config.get(section, key)
 
 
 class TimeRecord:
@@ -77,7 +53,7 @@ class TimeRecord:
             task_interval = end_time - self.start_time
             print('Task: '+sys.argv[0]+' Ends.')
             m = int(task_interval) / 60
-            s = int(task_interval) % 60
+            s = task_interval - m
             if m <= 1:
                 mi = 'minute'
             else:
@@ -105,6 +81,8 @@ def main_func():
     Connect to the Database and get input and output collection.
     """
     conn = pymongo.MongoClient('localhost', 27017)
+    # HEAD
+    """""
     db = conn['test']
     packages = db['bb'].find().sort([
         ("depth", pymongo.ASCENDING), ("b_total_call", pymongo.ASCENDING),
@@ -114,6 +92,17 @@ def main_func():
     dep_packages_st_4 = db['d4']
     dep_packages_st_5 = db['d5']
     dep_packages_st_6 = db['d6']
+    """"
+    # stat
+    db = conn.get_database('test')
+    packages = db.get_collection('bbb')  # bbb
+    d1 = db.get_collection('d21')
+    d2 = db.get_collection('d22')
+    d3 = db.get_collection('d23')
+    d4 = db.get_collection('d24')
+    d5 = db.get_collection('d25')
+    d6 = db.get_collection('d26')
+    # stat End
 
     """
         Search the packages among the database.
@@ -147,6 +136,7 @@ def main_func():
     cur_p = None
     cur_b = False
 
+    # HEAD
     cnt = 0
     for package in packages:
         package_count += 1
@@ -154,6 +144,18 @@ def main_func():
             time_recorder.alert(cnt)
         cnt += 1
         # !!!!!!! Important !!!!
+    # Head End
+    # Stat
+    for package in packages.find().sort(
+            [
+            ("depth", pymongo.ASCENDING),
+            ("b_total_call", pymongo.ASCENDING),
+            ("b_total_num", pymongo.ASCENDING),
+            ("b_hash", pymongo.ASCENDING)
+            ]):
+        package_count += 1
+
+        # stat End
         # This is a patch. Delete it when you run this function.
         # Step over Status 4.
 
@@ -163,10 +165,19 @@ def main_func():
 
         # We believe root directory is not a library unless the whole App is a library.
         if package['depth'] == 0:
+            # HEAD
+            '''''
             if 's_path' in package:
                 dir_parent_dict[package['s_path']] = 4
             del package['_id']
             dep_packages_st_4.insert(package)
+            '''
+            # Head End;
+            # Stat
+            dir_parent_dict[package['path']] = 4
+            del package['_id']
+            d4.insert(package)
+            # Stat end
             status_4_cnt += 1
             cur_b = False
             continue
@@ -176,19 +187,35 @@ def main_func():
         if package['direct_dir_num'] == 1 and package['direct_file_num'] == 0:
             if cur_b:
                 if cur_p['dep_num'] > 500:
+
                     cur_p['status'] = 1
                     status_1_cnt += 1
                     del cur_p['_id']
                     dep_packages_st_1.insert(cur_p)
+
+                    # cur_p['status'] = 1
+                    status_1_cnt += 1
+                    del cur_p['_id']
+                    d1.insert(cur_p)
+
                 else:
-                    cur_p['status'] = 2
+                    # cur_p['status'] = 2
                     status_2_cnt += 1
                     del cur_p['_id']
+
                     dep_packages_st_2.insert(cur_p)
             package['status'] = 5
             dir_parent_dict[package['path']] = 5
             del package['_id']
             dep_packages_st_5.insert(package)
+
+                    d2.insert(cur_p)
+
+            # package['status'] = 5
+            dir_parent_dict[package['path']] = 5
+            del package['_id']
+            d5.insert(package)
+
             status_5_cnt += 1
             cur_b = False
             continue
@@ -198,19 +225,20 @@ def main_func():
         # 1 means lib_root; 3 means lib_child, so I use Modulo operation here.)
 
         # 2015/08/20 We decide to compare package no matter what its parent is.
-        '''
+        # 2015/08/26 We decide not to compare packages if its parent is lib.
+
         dir_split = package['path'].split('\\')
         dir_parent_split = dir_split[:len(dir_split)-1]
         dir_parent = '\\'.join(dir_parent_split)
         if dir_parent in dir_parent_dict and dir_parent_dict[dir_parent] in [1, 3]:
             # Mark this package as lib_child and insert it into a new Database Collection.
-            package['status'] = 3
+            # package['status'] = 3
             dir_parent_dict[package['path']] = 3
             status_3_cnt += 1
             del package['_id']
-            dep_packages.insert(package)
+            d3.insert(package)
             continue
-        '''
+
 
         if not cur_b:       # if cur_package is not available
             cur_p = package
@@ -236,9 +264,11 @@ def main_func():
                                 cur_p['pp'].append(s_path)
                             status_6_cnt += 1
                             del package['_id']
-                            dep_packages_st_6.insert(package)
+                            d6.insert(package)
                             continue
 
+        # HEAD
+        ''''
         if cur_p['dep_num'] > 50:
             status_1_cnt += 1
             del cur_p['_id']
@@ -247,6 +277,20 @@ def main_func():
             status_2_cnt += 1
             del cur_p['_id']
             dep_packages_st_2.insert(cur_p)
+            '''
+        # Stat
+        if cur_p['dep_num'] > 500:
+            # cur_p['status'] = 1
+            status_1_cnt += 1
+            del cur_p['_id']
+            d1.insert(cur_p)
+        else:
+            # cur_p['status'] = 2
+            status_2_cnt += 1
+            del cur_p['_id']
+            d2.insert(cur_p)
+
+        # Stat End
         cur_p = package
         cur_p['dep_num'] = 1
         cur_p['pp'] = []
@@ -358,12 +402,15 @@ def main_func():
     for a, b in [(k, total_dep_num[k]) for k in sorted(total_dep_num.keys())]:
         dep_writer.write(str(a)+'\t'+str(b)+'\n')
     dep_writer.close()
-    status_writer = open("Stat_num.txt", 'w')
+
+    status_writer = open('status_writer.txt', 'w')
+
     status_writer.write('Status 1 : '+str(status_1_cnt)+'\n')
     status_writer.write('Status 2 : '+str(status_2_cnt)+'\n')
     status_writer.write('Status 3 : '+str(status_3_cnt)+'\n')
     status_writer.write('Status 4 : '+str(status_4_cnt)+'\n')
     status_writer.write('Status 5 : '+str(status_5_cnt)+'\n')
+    status_writer.write('Status 6 : '+str(status_6_cnt)+'\n')
     for a, b in [(k, dir_parent_dict[k]) for k in sorted(dir_parent_dict.keys())]:
         status_writer.write(str(a)+'\t'+str(b)+'\n')
     status_writer.close()
@@ -372,6 +419,7 @@ def main_func():
     print 'Status_3 : '+str(status_3_cnt)
     print 'Status_4 : '+str(status_4_cnt)
     print 'Status_5 : '+str(status_5_cnt)
+    print 'Status_6 : '+str(status_6_cnt)
 
 if __name__ == '__main__':
     print("This code is written by " + __author__ + '\n')
